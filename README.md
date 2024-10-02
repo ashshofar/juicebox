@@ -1,66 +1,193 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+# Laravel Blog API
 
-## About Laravel
+This is a simple Laravel blog API that includes user registration, authentication, post creation, and job queueing. Users receive a welcome email upon registration, and there is also a command to manually dispatch the welcome email job.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Requirements
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Before you begin, ensure you have met the following requirements:
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- **PHP**: >= 8.0
+- **Composer**: Latest version
+- **Database**: MySQL or any other supported database
 
-## Learning Laravel
+## Setup Instructions
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Follow these steps to set up the project locally:
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### 1. Clone the Repository
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+```bash
+git clone https://github.com/ashshofar/juicebox
+cd juicebox
+```
 
-## Laravel Sponsors
+### 2. Install PHP Dependencies
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+Run the following command to install the Laravel dependencies:
 
-### Premium Partners
+```bash
+composer install
+```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+### 3. Set Up the Environment
 
-## Contributing
+1. Copy the `.env.example` file to `.env`:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+   ```bash
+   cp .env.example .env
+   ```
 
-## Code of Conduct
+2. Open the `.env` file and set up the necessary environment variables, including database credentials and application URL:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+   ```bash
+   APP_NAME=Laravel
+   APP_ENV=local
+   APP_KEY=
+   APP_DEBUG=true
+   APP_URL=http://localhost
 
-## Security Vulnerabilities
+   DB_CONNECTION=mysql
+   DB_HOST=127.0.0.1
+   DB_PORT=3306
+   DB_DATABASE=laravel_blog
+   DB_USERNAME=root
+   DB_PASSWORD=
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+   QUEUE_CONNECTION=database
+   ```
 
-## License
+3. Generate the application key:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+   ```bash
+   php artisan key:generate
+   ```
+
+### 4. Set Up the Database
+
+1. Create a new database (for example, `laravel_blog`).
+
+   For MySQL:
+   ```sql
+   CREATE DATABASE laravel_blog;
+   ```
+
+2. Run the database migrations and seed the database:
+
+   ```bash
+   php artisan migrate --seed
+   ```
+
+### 5. Run the Development Server
+
+To run the application on a local development server, use the following command:
+
+```bash
+php artisan serve
+```
+
+The application will be accessible at [http://localhost:8000](http://localhost:8000).
+
+---
+
+## Running the Queue Worker
+
+To process queued jobs, such as sending welcome emails, you need to run a queue worker.
+
+### Step 1: Set Up the Queue
+
+Ensure that the queue is configured in your `.env` file by setting the `QUEUE_CONNECTION` variable to `database` (or your preferred connection).
+
+```bash
+QUEUE_CONNECTION=database
+```
+
+### Step 2: Run the Queue Worker
+
+Start the queue worker to process jobs:
+
+```bash
+php artisan queue:work
+```
+
+This will keep the worker running and processing any queued jobs, such as sending the welcome email after a user registers.
+
+### Step 3: Run the Queue Table Migration (Optional)
+
+If you haven’t yet set up the queue database table, you can generate and run the migration:
+
+```bash
+php artisan queue:table
+php artisan migrate
+```
+
+This will create a `jobs` table in your database to store queued jobs.
+
+---
+
+## Manually Dispatching the Welcome Email Job
+
+You can manually dispatch the welcome email job for a user using an Artisan command.
+
+### Step 1: Create the Artisan Command
+
+The project includes an Artisan command to send a welcome email to a user by their ID. The command's signature is:
+
+```bash
+php artisan send:welcome-email {user_id}
+```
+
+### Step 2: Run the Command
+
+To send a welcome email to a specific user, run the following command, replacing `{user_id}` with the ID of the user:
+
+```bash
+php artisan send:welcome-email 1
+```
+
+This will manually dispatch the welcome email job for the user with the given ID.
+
+---
+
+## Testing the Application
+
+You can run the test suite using PHPUnit. To do this, use the following command:
+
+```bash
+php artisan test
+```
+
+Make sure that your `.env.testing` file is set up to use a testing database, such as an SQLite in-memory database:
+
+```bash
+DB_CONNECTION=sqlite
+DB_DATABASE=:memory:
+```
+
+---
+
+## API Documentation
+
+The project uses Swagger/OpenAPI for API documentation.
+
+1. Install L5-Swagger (if not installed):
+
+   ```bash
+   composer require darkaonline/l5-swagger
+   ```
+
+2. Generate the Swagger documentation:
+
+   ```bash
+   php artisan l5-swagger:generate
+   ```
+
+You can access the API documentation at [http://localhost:8000/api/documentation](http://localhost:8000/api/documentation).
+
+---
+
+## Contact
+
+For any inquiries or issues, feel free to contact [shofar.ikhsan@gmail.com](mailto:shofar.ikhsan@gmail.com).
+
+---
